@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ashwam Wankhede | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --primary: #38bdf8;
+            --accent: #6366f1;
+            --text: #f8fafc;
+            --text-dim: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- BACKGROUND ATMOSPHERE --- */
+        .aura {
+            position: fixed;
+            width: 1000px;
+            height: 1000px;
+            border-radius: 50%;
+            filter: blur(180px);
+            z-index: -1;
+            opacity: 0.12;
+            animation: float 25s infinite alternate;
+        }
+        .aura-1 { top: -20%; left: -10%; background: var(--primary); }
+        .aura-2 { bottom: -20%; right: -10%; background: var(--accent); }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(120px, 80px); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 12px 35px;
+            border-radius: 100px;
+            display: flex;
+            gap: 35px;
+            z-index: 1000;
+        }
+
+        nav a { 
+            color: var(--text-dim); 
+            text-decoration: none; 
+            font-size: 0.8rem; 
+            font-weight: 700;
+            transition: 0.4s; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active { color: #fff; transform: translateY(-2px); text-shadow: 0 0 10px var(--primary); }
+
+        /* --- PAGE STRUCTURE --- */
+        .page {
+            display: none;
+            height: 100vh;
+            padding: 0 8%;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        .page.active { display: flex; opacity: 1; transform: translateY(0); }
+        .container { width: 100%; max-width: 1400px; }
+
+        /* --- HERO --- */
+        .hero { display: flex; align-items: center; gap: 80px; }
+        .hero-img-box {
+            position: relative;
+            width: 380px;
+            height: 480px;
+            background: var(--card-bg);
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+        }
+        #home img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s ease; }
+        .hero-text h1 { font-size: 6rem; line-height: 0.9; font-weight: 800; letter-spacing: -3px; margin-bottom: 20px; }
+        .hero-text .branch { color: var(--primary); letter-spacing: 8px; text-transform: uppercase; margin-bottom: 10px; display: block; font-weight: 600; }
+
+        /* --- CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 35px;
+            backdrop-filter: blur(15px);
+            transition: 0.4s ease;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); background: rgba(30, 41, 59, 0.5); }
+        .card h3 { font-size: 1.6rem; margin-bottom: 15px; color: var(--primary); }
+
+        /* --- CONTACT GRID --- */
+        .contact-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            width: 100%; 
+            max-width: 900px; 
+            margin: 40px auto 0;
+        }
+
+        .contact-card {
+            background: rgba(15, 23, 42, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px 35px;
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .contact-card h3 { color: #fff; font-size: 1.1rem; font-weight: 500; opacity: 0.9; }
+        .contact-card .arrow { font-size: 1.2rem; color: #fff; opacity: 0.5; transition: 0.3s; }
+
+        .contact-card:hover {
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .contact-card:hover .arrow { opacity: 1; transform: translateX(5px); }
+
+        /* --- MODAL SYSTEM --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 6, 23, 0.96);
+            backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            width: 95%;
+            max-width: 1250px;
+            height: 85vh;
+            border-radius: 40px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            animation: modalIn 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+        .modal-viewer { flex: 2; background: #000; position: relative; }
+        .modal-sidebar { flex: 1; padding: 40px; display: flex; flex-direction: column; gap: 20px; border-left: 1px solid rgba(255,255,255,0.05); overflow-y: auto; }
+        
+        iframe { width: 100%; height: 100%; border: none; }
+        .modal-img-full { width: 100%; height: 100%; object-fit: contain; padding: 20px; }
+
+        .close-btn { position: absolute; top: 25px; right: 30px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; z-index: 2100; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+        .close-btn:hover { background: #ff4757; }
+
+        .skill-tag {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        /* --- STATUS BAR --- */
+        .status-bar {
+            position: fixed;
+            bottom: 30px;
+            left: 40px;
+            right: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.05);
+            z-index: 999;
+        }
+        .status-item { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; text-transform: uppercase; color: var(--text-dim); }
+        .dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; }
+
+        @media (max-width: 1000px) {
+            .modal-content { flex-direction: column; height: 90vh; }
+            .modal-viewer { flex: 1.5; }
+            .modal-sidebar { flex: 1; }
+            body { overflow-y: auto; height: auto; }
+            .hero { flex-direction: column; text-align: center; padding-top: 100px; }
+            .grid, .contact-grid { grid-template-columns: 1fr; }
+            .hero-text h1 { font-size: 4rem; }
+            .status-bar { position: relative; margin: 20px; left: 0; right: 0; flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+
+    <nav>
+        <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+        <a onclick="showPage('about')" id="nav-about">About</a>
+        <a onclick="showPage('projects')" id="nav-projects">Projects</a>
+        <a onclick="showPage('contact')" id="nav-contact">Contact</a>
+    </nav>
+
+    <section id="home" class="page active">
+        <div class="container hero">
+            <div class="hero-img-box">
+                <img src="https://i.ibb.co/qFLH1fvF/ASH2.jpg" alt="Ashwam Wankhede">
+            </div>
+            <div class="hero-text">
+                <span class="branch">Software Engineering</span>
+                <h1>Ashwam<br>Wankhede</h1>
+                <p style="color: var(--text-dim); font-size: 1.2rem; max-width: 500px;">MIT Academy of Engineering student based in Alandi, Pune. Using Design Thinking to build accessible educational tools.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="page">
+        <div class="container">
+            <h2 style="font-size: 3.5rem; margin-bottom: 30px; font-weight: 800;">Expertise</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Performance</h3>
+                    <p>MIT Academy of Engineering<br>
+                    <span style="color: var(--primary); font-weight: 700;">SGPA: 8.05 (Sem 1)</span><br>
+                    MHT-CET: 88.55 Percentile</p>
+                </div>
+                <div class="card">
+                    <h3>Skill Set</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Tableau</span>
+                        <span class="skill-tag">C++</span>
+                        <span class="skill-tag">Design Thinking</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Social Mission</h3>
+                    <p>Building logic-driven systems that empower the <b>uneducated</b> through simplified user experiences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="page">
+        <div class="container">
+            <h2 style="font-size: 3.5rem; margin-bottom: 30px; font-weight: 800;">Selected Work</h2>
+            <div class="grid">
+                <div class="card" onclick="openModal('dt-modal')" style="cursor: pointer; border-color: var(--accent);">
+                    <h3 style="color: var(--primary);">01 / Ed-Tech Scoreboard</h3>
+                    <p>A social impact prototype designed to bridge the educational gap through accessible UI. <br><br> <strong>INTERACT WITH APP →</strong></p>
+                </div>
+
+                <div class="card" onclick="openModal('hw-modal')" style="cursor: pointer;">
+                    <h3 style="color: var(--primary);">02 / Projectile Launcher</h3>
+                    <p>Applied Mechanics hardware calculating flight metrics through physics logic. <br><br> <strong>VIEW BUILD →</strong></p>
+                </div>
+
+                <div class="card static">
+                    <h3 style="color: var(--primary);">03 / Data Insights</h3>
+                    <p>Analysis of automotive trends and predictive price modeling using Tableau and data mining tools.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="page">
+        <div class="container" style="text-align: center;">
+            <h2 style="font-size: 5rem; margin-bottom: 10px; font-weight: 800; letter-spacing: -2px;">Let's Talk</h2>
+            <p style="color: var(--text-dim); font-size: 1.1rem; margin-bottom: 40px;">I'm open to collaborations and internship opportunities.</p>
+            
+            <div class="contact-grid">
+                <a href="mailto:ashwamwankhede1986@gmail.com" class="contact-card">
+                    <h3>Email Me</h3>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="tel:+919699825374" class="contact-card">
+                    <h3>Call Me</h3>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://www.linkedin.com/in/ashwam-wankhede-87681b396/" target="_blank" class="contact-card">
+                    <h3>LinkedIn</h3>
+                    <span class="arrow">→</span>
+                </a>
+
+                <a href="https://www.instagram.com/ashwam_wankhede/" target="_blank" class="contact-card">
+                    <h3>Instagram</h3>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div id="dt-modal" class="modal-overlay" onclick="closeModal('dt-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('dt-modal')">&times;</button>
+            <div class="modal-viewer">
+                <iframe src="https://adityadtmit.lovable.app/scoreboard"></iframe>
+            </div>
+            <div class="modal-sidebar">
+                <span class="skill-tag">Design Thinking</span>
+                <span class="skill-tag">Social Impact</span>
+                <h2>Ed-Tech Scoreboard</h2>
+                <p style="color: var(--text-dim); line-height: 1.6;">
+                    Built with the primary goal of <b>educating the uneducated</b>, this prototype simplifies complex scoring data into a visual interface that requires zero prior technical knowledge.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="hw-modal" class="modal-overlay" onclick="closeModal('hw-modal')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="close-btn" onclick="closeModal('hw-modal')">&times;</button>
+            <div class="modal-viewer">
+                <img src="https://i.ibb.co/4ydjyRd/projectile-launcher.jpg" class="modal-img-full" alt="Hardware Project">
+            </div>
+            <div class="modal-sidebar">
+                <span class="skill-tag">Applied Mechanics</span>
+                <span class="skill-tag">Kinematics</span>
+                <span class="skill-tag">Hardware Prototyping</span>
+                <h2>Projectile Launcher</h2>
+                <p style="color: var(--text-dim); line-height: 1.6;">
+                    Designed and engineered a precision-based hardware system to demonstrate the fundamental laws of motion. This project bridges theoretical physics with physical execution, allowing for real-time verification of trajectory paths.
+                </p>
+                <h4 style="color: #fff; font-size: 0.95rem;">Key Technical Features:</h4>
+                <ul style="color: var(--text-dim); font-size: 0.85rem; line-height: 1.8; padding-left: 20px;">
+                    <li><b>Variable Elevation:</b> Calibrated launch angles from 0° to 90° for range testing.</li>
+                    <li><b>Physics Logic:</b> Used the range formula $R = \frac{v^2 \sin 2\theta}{g}$ to predict landing zones with high accuracy.</li>
+                    <li><b>Force Optimization:</b> Engineered a mechanical release mechanism to ensure consistent initial velocity across trials.</li>
+                </ul>
+                <p style="color: var(--text-dim); font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                    Developed as a core project at MIT Academy of Engineering, this build showcases the ability to translate complex equations into a functional physical device.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <div class="status-item" id="live-status"><div class="dot"></div> SYSTEM ACTIVE // 00:00:00</div>
+        <div class="status-item">📍 ALANDI, PUNE, MAHARASHTRA</div>
+        <div class="status-item" style="color: var(--primary); font-weight: 800;">MIT ACADEMY OF ENGINEERING</div>
+    </div>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            const s = document.getElementById(pageId);
+            s.style.display = 'flex';
+            setTimeout(() => { 
+                s.classList.add('active'); 
+                document.getElementById('nav-' + pageId).classList.add('active'); 
+            }, 50);
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function updateStatus() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0') + ":" + 
+                            now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('live-status').innerHTML = `<div class="dot"></div> SYSTEM ACTIVE // ${timeStr}`;
+        }
+        setInterval(updateStatus, 1000); 
+        updateStatus();
+    </script>
+</body>
+</html>
